@@ -41,6 +41,18 @@ app.post("/api/shorturl", (req, res) => {
       return res.status(400).json({ error: "Invalid URL" });
     }
 
+    const existingId = Object.keys(urlStore).find(
+      (key) => urlStore[key] === input,
+    );
+
+    if (existingId) {
+      // URL already in store → return existing short_url
+      return res.json({
+        original_url: input,
+        short_url: Number(existingId),
+      });
+    }
+
     const id = nextId++;
     urlStore[id] = input;
     res.json({ original_url: input, short_url: id });
